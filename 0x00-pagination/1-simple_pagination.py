@@ -24,7 +24,6 @@ class Server:
             with open(self.DATA_FILE) as f:
                 reader = csv.reader(f)
                 dataset = [row for row in reader]
-                print(dataset[0])
             self.__dataset = dataset[1:]
 
         return self.__dataset

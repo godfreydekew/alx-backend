@@ -8,6 +8,7 @@ from flask_babel import Babel, gettext as _
 
 app = Flask(__name__)
 
+
 class Config:
     """
     Configuration for Flask app.
@@ -15,6 +16,7 @@ class Config:
     LANGUAGES = ["en", "fr"]
     BABEL_DEFAULT_LOCALE = "en"
     BABEL_DEFAULT_TIMEZONE = "UTC"
+
 
 app.config.from_object(Config)
 
@@ -27,6 +29,7 @@ users = {
     4: {"name": "Teletubby", "locale": None, "timezone": "Europe/London"},
 }
 
+
 def get_user():
     """Retrieve user by `login_as` parameter."""
     user_id = request.args.get('login_as')
@@ -38,10 +41,12 @@ def get_user():
     except ValueError:
         return None
 
+
 @app.before_request
 def before_request():
     """Set `g.user` to the current user if logged in."""
     g.user = get_user()
+
 
 @babel.localeselector
 def get_locale():
@@ -50,14 +55,17 @@ def get_locale():
         return g.user['locale']
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
+
 @app.route('/')
 def index():
     """Render the index page with user-specific or default messages."""
     if g.user:
-        message = _("You are logged in as %(username)s.", username=g.user['name'])
+        message = _(
+                "You are logged in as %(username)s.", username=g.user['name'])
     else:
         message = _("You are not logged in.")
     return render_template('5-index.html', message=message)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
